@@ -1,0 +1,93 @@
+# Innovation
+
+## NetLLM
+
+NetLLM represents the first framework specifically designed to efficiently adapt Large Language Models (LLMs) for networking applications. This innovative approach enables the use of a single LLM (such as Llama2) as a foundation model to tackle various networking tasks without requiring modifications to the base model while achieving enhanced performance. NetLLM consists of three core components:
+
+### Multimodal Encoder
+The multimodal encoder functions at the input side of the LLM to effectively process diverse input information typical in networking tasks. Its primary goal is to automatically project task inputs from various modalities into the same feature space as language tokens, enabling the LLM to understand and utilize this information for problem-solving. The encoder operates through:
+
+1. Modality-specific feature extractors that process raw inputs from various sources relevant to networking
+2. Trainable projection layers that convert these features into token-like embedding vectors compatible with the LLM's input requirements
+
+This approach allows the LLM to seamlessly work with non-textual data types common in networking applications, bridging the modality gap that typically limits LLM applications in technical domains.
+
+### Networking Head
+To address the inefficiency of traditional token-based answer generation, NetLLM replaces the default language modeling head with specialized networking heads at the output side of the LLM. These networking heads are lightweight trainable projectors that map the LLM's output features directly into task-specific answers.
+
+Rather than generating tokens autoregressively, these heads enable the LLM to produce valid answers in a single inference step by directly outputting from the valid range of possible answers (e.g., selecting a bitrate from candidate options). This approach:
+
+1. Eliminates the risk of hallucination and invalid outputs
+2. Significantly reduces generation latency
+3. Ensures reliability for time-sensitive networking applications
+
+### DD-LRNA
+The Data-Driven Low-Rank Networking Adaptation (DD-LRNA) scheme drastically reduces fine-tuning costs while enabling the LLM to acquire domain-specific knowledge for networking. This scheme incorporates:
+
+1. A data-driven adaptation pipeline that works for both prediction and decision-making tasks
+2. For decision-making tasks, it employs efficient data-driven reinforcement learning techniques that eliminate time-consuming environment interactions by using an experience pool collected from existing networking algorithms
+3. Introduction of additional trainable low-rank matrices (accounting for only 0.31% of total parameters) that efficiently capture networking knowledge
+
+This approach reduces GPU memory requirements by 60.9% and training time by 15.1% compared to full parameter fine-tuning.
+
+## Networking Tasks
+
+### Tasks
+NetLLM is evaluated on three representative networking tasks that cover different learning paradigms and input modalities:
+
+1. **Adaptive Bitrate Streaming (ABR)**: A reinforcement learning model that dynamically adjusts chunk-level bitrates based on network conditions and playback buffer length during video streaming. The objective is to maximize Quality of Experience (QoE) by balancing factors like chunk bitrate, bitrate fluctuation, and rebuffering time.
+
+2. **Cluster Job Scheduling (CJS)**: Uses reinforcement learning to schedule incoming jobs within a distributed computing cluster. Each job is represented as a directed acyclic graph (DAG) describing execution stage dependencies and resource demands. The scheduler selects which job stage to run next and allocates computing resources to minimize average job completion time.
+
+3. **Viewport Prediction (VP)**: A supervised learning task that predicts a viewer's future viewport positions based on historical viewport data and potentially video content information. This is crucial for immersive video streaming systems (e.g., 360° videos) where only content within the viewer's viewport is streamed in high quality to reduce bandwidth consumption.
+
+### Why These Tasks?
+These tasks were selected for several strategic reasons:
+
+1. They cover both major learning paradigms commonly used in networking: supervised learning for prediction tasks (VP) and reinforcement learning for decision-making tasks (ABR and CJS).
+
+2. They include both centralized control (CJS, where the scheduler manages the entire cluster) and distributed control (ABR, where clients independently select bitrates) networking scenarios.
+
+3. They involve diverse input modalities that represent the primary data types encountered in networking tasks, including time-series data, graphs, and multimedia content.
+
+VP was specifically chosen as it encompasses multiple input modalities and requires cross-modality fusion, making it more challenging for LLM adaptation than prediction tasks with single input modalities (e.g., bandwidth prediction). Together, these tasks ensure that the evaluation is representative and applicable to a wide range of networking scenarios.
+
+## Handling LLM Challenges
+
+### Large Modality Gap
+Networking tasks involve diverse input modalities (time-series data, graphs, images, etc.) that are incompatible with LLMs' text-based input format. This creates a substantial modality gap that prevents direct utilization of LLMs for networking tasks.
+
+While prompt learning approaches that transform data into textual prompts might seem like a solution, they fall short in networking for two reasons: (1) complex modalities like images and graphs cannot be effectively transformed into text, and (2) even when transformation is possible (e.g., time-series data), the performance is suboptimal due to loss of information.
+
+**[FIGURE PLACEHOLDER: Figure 2 (left) showing comparison between prompt learning and NetLLM performance on viewport prediction task, demonstrating NetLLM's superior performance]**
+
+NetLLM addresses this challenge through its multimodal encoder that effectively processes diverse input modalities and projects them into a feature space compatible with the LLM.
+
+### Inefficiency of Token-Based Answer Generation
+The default token-based generation mechanism of LLMs presents two major limitations for networking applications:
+
+1. The uncertainty in token prediction increases the risk of producing physically invalid answers (hallucination), compromising reliability for critical networking systems.
+
+2. Due to the autoregressive nature of token generation, LLMs often require multiple inference steps to generate a single answer, resulting in high latency that fails to meet the quick responsiveness requirements of networking applications.
+
+**[FIGURE PLACEHOLDER: Figure 2 (middle and right) showing the fraction of valid answers and generation time comparison between token-based prediction and NetLLM's networking head approach]**
+
+NetLLM overcomes these limitations with its networking head that directly maps the LLM's output features to valid, task-specific answers in a single inference step.
+
+### High Adaptation Cost
+Adapting LLMs for networking tasks, particularly reinforcement learning-based ones like ABR and CJS, involves prohibitive computational costs due to:
+
+1. Time-consuming environment interactions required for experience collection in standard RL approaches
+
+2. High memory and computational requirements for fine-tuning the full parameter set of large models
+
+**[FIGURE PLACEHOLDER: Figure 3 showing training time comparison between standard RL and NetLLM's data-driven approach, highlighting the elimination of environment interaction time]**
+
+**[FIGURE PLACEHOLDER: Figure 4 illustrating the reduction in GPU memory and training time achieved by NetLLM's DD-LRNA scheme compared to full-parameter fine-tuning]**
+
+NetLLM's DD-LRNA scheme addresses these challenges by:
+1. Using a data-driven adaptation pipeline that eliminates the need for active environment interaction
+2. Introducing efficient low-rank matrices that capture domain knowledge while updating only 0.31% of the model parameters
+3. Reducing GPU memory consumption by 60.9% and training time by 15.1%
+
+This approach makes LLM adaptation for networking tasks practical and efficient while maintaining high performance.
