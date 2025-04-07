@@ -14,18 +14,33 @@
 \usepackage{caption}
 \usepackage{subfigure}
 \usepackage{graphicx}
+\usepackage{titling} % 用于自定义标题页
 
 % 修改页边距
 \usepackage[top=1.3cm, bottom=1.3cm, left=1.2cm, right=1.2cm]{geometry}
 
-\title{Network Task Management Methodologies}
+\title{\LARGE \textbf{Network Task Management with Large Language Models}}
 \author{Wang Wenbo \\ \texttt{24064411G} \and Zhou Shiyi \\ \texttt{24116285G} \and Zhang Zhihao \\ \texttt{24044588G}}
 \date{\today}
 
 \begin{document}
 \captionsetup[figure]{labelfont={bf},labelformat={default},labelsep=period,name={Figure }}
 
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge\bfseries Network Task Management with Large Language Models\par}
+    \vspace{2cm}
+    {\Large\itshape Wang Wenbo, Zhou Shiyi, Zhang Zhihao\par}
+    \vfill
+    {\large A report on NetLLM: Efficient LLM Adaptation for Network Tasks\par}
+    \vspace{1cm}
+    {\large \today\par}
+\end{titlepage}
+
 \maketitle
+\tableofcontents
+\newpage
 
 \section{Background}
 Network systems require sophisticated control algorithms to optimize performance across diverse, dynamic conditions. These management approaches have evolved through distinct methodological paradigms, each with characteristic strengths and limitations.
@@ -292,5 +307,16 @@ By reading this paper we appreciate the powerful generalization and migratabilit
 In future research, the potential of the NetLLM framework for other network-related tasks, such as intrusion detection and network identification software, should be explored in depth. At the same time, more efficient fine-tuning methods are sought to achieve the goal of being able to further reduce computational resources and time consumption. The NetLLM framework is not only of academic interest, but may also have a profound impact on the design and optimization of physical network systems. In addition, the excellent design of NetLLM framework also has the potential of cross-domain application. For example, the multimodal encoder and network header provide new solutions to the problem of handling complex, multimodal data.
 
 In conclusion, the NetLLM framework not only shows great potential in handling complex network tasks but also has a wide range of applications.
+
+\section{Contributions}
+
+\subsection{Zhang Zhihao}
+Zhihao conducted an in-depth analysis of the innovations and motivations of NetLLM, wrote the background and motivation sections, and shared the findings with the team to ensure a unified understanding. He also created the corresponding slides for this part to maintain consistency in the overall presentation.
+
+\subsection{Zhou Shiyi}
+Shiyi provided a detailed analysis of the technical details of NetLLM including model architecture and algorithm design, and wrote the relevant section of the report and prepared the presentation materials. She closely collaborated with the team to ensure that the technical details accurately supported other parts of the project and was responsible for creating the slides for this section.
+
+\subsection{Wang Wenbo}
+Wenbo thoroughly interpreted the evaluation and discussion sections of the paper, summarized the effectiveness and limitations of the NetLLM method, explored potential improvements and future applications, and wrote the relevant sections of the report. She also summarized the team members' different understandings of the method and was responsible for creating the corresponding slides.
 
 \end{document}
